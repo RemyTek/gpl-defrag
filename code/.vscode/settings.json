@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "ui_local.h": "c",
+        "bg_public.h": "c",
+        "ui_shared.h": "c",
+        "menudef.h": "c"
+    }
+}
