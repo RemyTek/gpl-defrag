@@ -1420,7 +1420,7 @@ void SP_func_train (gentity_t *self) {
 		self->damage = 0;
 	} else {
 		if (!self->damage) {
-			self->damage = 2;
+			self->damage = 0;
 		}
 	}
 
@@ -1504,7 +1504,7 @@ void SP_func_rotating (gentity_t *ent) {
 	}
 
 	if (!ent->damage) {
-		ent->damage = 2;
+		ent->damage = 0;
 	}
 
 	trap_SetBrushModel( ent, ent->model );

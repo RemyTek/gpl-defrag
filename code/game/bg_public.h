@@ -102,7 +102,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #endif
 
 typedef enum {
-	GT_FFA,				// free for all
+	GT_RUN,				// free for all
 	GT_TOURNAMENT,		// one on one tournament
 	GT_SINGLE_PLAYER,	// single player ffa
 
@@ -190,8 +190,9 @@ typedef struct {
 	//float		xyspeed;
 
 	// for fixed msec Pmove
-	int			pmove_fixed;
-	int			pmove_msec;
+	int pmove_fixed;
+	int pmove_msec;
+	int movetype;  // Physics type selection from cvar. Latch protected
 
 	// callbacks to test the world
 	// these will be different functions during game and cgame
@@ -218,7 +219,8 @@ typedef enum {
 	STAT_ARMOR,				
 	STAT_DEAD_YAW,					// look this direction when dead (FIXME: get rid of?)
 	STAT_CLIENTS_READY,				// bit mask of clients wishing to exit the intermission (FIXME: configstring?)
-	STAT_MAX_HEALTH					// health / armor limit, changable by handicap
+	STAT_MAX_HEALTH,				// health / armor limit, changable by handicap
+	STAT_TIME_LASTJUMP
 } statIndex_t;
 
 

@@ -556,9 +556,9 @@ void ClientEvents( gentity_t *ent, int oldEventSequence ) {
 				break;
 			}
 			if ( event == EV_FALL_FAR ) {
-				damage = 10;
+				damage = 0;
 			} else {
-				damage = 5;
+				damage = 0;
 			}
 			ent->pain_debounce_time = level.time + 200;	// no normal pain sound
 			G_Damage (ent, NULL, NULL, NULL, NULL, damage, 0, MOD_FALLING);
@@ -921,6 +921,9 @@ void ClientThink_real( gentity_t *ent ) {
 	pm.pmove_msec = pmove_msec.integer;
 
 	VectorCopy( client->ps.origin, client->oldOrigin );
+
+	//pass pro_phyiscs through pm
+	pm.movetype = df_promode.integer;
 
 #ifdef MISSIONPACK
 		if (level.intermissionQueued != 0 && g_singlePlayer.integer) {

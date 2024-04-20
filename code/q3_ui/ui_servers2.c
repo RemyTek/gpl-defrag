@@ -477,7 +477,7 @@ static void ArenaServers_UpdateList( void )
 			break;
 
 		case GAMES_FFA:
-			if( servernodeptr->gametype != GT_FFA ) {
+			if( servernodeptr->gametype != GT_RUN ) {
 				continue;
 			}
 			break;

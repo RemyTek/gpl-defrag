@@ -91,6 +91,7 @@ G_CVAR( g_smoothClients, "g_smoothClients", "1", 0, 0, qfalse, qfalse )
 G_CVAR( pmove_fixed, "pmove_fixed", "0", CVAR_SYSTEMINFO, 0, qfalse, qfalse )
 G_CVAR( pmove_msec, "pmove_msec", "8", CVAR_SYSTEMINFO, 0, qfalse, qfalse )
 
-G_CVAR( g_rotation, "g_rotation", "0", CVAR_ARCHIVE, 0, qfalse, qfalse )
+G_CVAR( g_rotation, "g_rotation", "0", CVAR_ARCHIVE | CVAR_SYSTEMINFO, 0, qfalse, qfalse )
+G_CVAR( df_promode, "df_promode", "0", CVAR_SERVERINFO | CVAR_SYSTEMINFO, 0, qtrue, qfalse )
 
 #undef G_CVAR

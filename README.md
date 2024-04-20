@@ -1,3 +1,5 @@
-# foundation-core
+# GPL Defrag
 
-Core mod foundation is built on.
+## GPL version of Defrag
+
+Aims to be a 1:1 copy of Defrag

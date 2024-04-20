@@ -29,7 +29,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //==================================================================
 
 // the "gameversion" client command will print this plus compile date
-#define	GAMEVERSION	"baseq3"
+#define	GAMEVERSION	"gpl-defrag"
 
 #define BODY_QUEUE_SIZE		8
 
@@ -354,6 +354,10 @@ struct gclient_s {
 		int		enemy;
 		int		amount;
 	} damage;
+
+	// Basic Start/End timer support
+	int timer_start;  // servertime at the moment of hitting start trigger
+	int timer_end;    // servertime at the moment of hitting end trigger
 };
 
 

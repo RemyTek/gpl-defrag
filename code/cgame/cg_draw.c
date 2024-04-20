@@ -1433,7 +1433,9 @@ static void CG_DrawLowerRight( void ) {
 		y = CG_DrawTeamOverlay( y, qtrue, qfalse );
 	} 
 
-	y = CG_DrawScores( y );
+	if ( cgs.gametype != GT_RUN ) {
+		y = CG_DrawScores( y );
+	}
 	y = CG_DrawPowerups( y );
 }
 #endif // MISSIONPACK
@@ -2023,21 +2025,23 @@ CG_SetCrosshairColor
 static void CG_SetCrosshairColor( void ) {
 	static int		colorNum;
 	static float	*colors[] = {
-		colorBlack,		//0
-		colorRed,		//1
-		colorGreen,		//2
-		colorYellow,	//3
-		colorBlue,		//4
-		colorCyan,		//5
-		colorMagenta,	//6
-		colorWhite,		//7
+		colorBlack,
+		colorRed,
+		colorGreen,
+		colorYellow,
+		colorBlue,	
+		colorCyan,
+		colorMagenta,
+		colorWhite,
+		colorOrange,
+		colorPink
 	};
 
 	colorNum = cg_crosshairColor.integer;
-	if ( colorNum > 7 || colorNum < 0 ) { // if it's larger than 7 or less than 0, set it to white
+	if ( colorNum > 9 || colorNum < 0 || !colorNum ) { // if it's larger than 9 or less than 0, set it to white
 		colorNum = 7;
 	}
-	colorNum = colorNum % ARRAY_LEN( colors );
+	colorNum = ( colorNum ) % ARRAY_LEN( colors );
 
 	trap_R_SetColor( colors[colorNum] );
 }
@@ -2474,8 +2478,7 @@ static void CG_DrawWarmup( void ) {
 	}
 
 	if ( cg.warmup < 0 ) {
-		CG_DrawString( 320,24, "Waiting for players", colorWhite, BIGCHAR_WIDTH, BIGCHAR_HEIGHT, 0,
-			DS_PROPORTIONAL | DS_CENTER | DS_SHADOW );
+		//CG_DrawString( 320,24, "Waiting for players", colorWhite, BIGCHAR_WIDTH, BIGCHAR_HEIGHT, 0, DS_PROPORTIONAL | DS_CENTER | DS_SHADOW );
 		return;
 	}
 
@@ -2509,8 +2512,8 @@ static void CG_DrawWarmup( void ) {
 #endif
 		}
 	} else {
-		if ( cgs.gametype == GT_FFA ) {
-			s = "Free For All";
+		if ( cgs.gametype == GT_RUN ) {
+			s = "Defrag Race";
 		} else if ( cgs.gametype == GT_TEAM ) {
 			s = "Team Deathmatch";
 		} else if ( cgs.gametype == GT_CTF ) {
@@ -2600,6 +2603,92 @@ void CG_DrawTimedMenus( void ) {
 }
 #endif
 
+	//:::::::::::::::::::::::::::::::::::::::::
+	static void CG_DrawTimerActive(float x, float y, float alpha) {
+		int timer;
+		int msec;
+		int sec;
+		int min;
+		int ten;
+
+		char* s;
+		int w;
+		
+		x = x * SCREEN_WIDTH;
+		y = y * SCREEN_HEIGHT;
+
+		// Timers set to -1 are considered disabled. On player_die(), ClientSpawn(), etc
+		if (cg.timer_stop >= 0) {  // If there is a timer_stop active, draw it and ignore active timer
+			timer = cg.timer_stop;
+		} else if (cg.timer_start >= 0) {  // Draw active timer instead
+			timer = cg.snap->serverTime - cg.timer_start;
+		} else {  // None of them is active, so draw a static 0 timer
+			timer = 0;
+		}
+
+		msec = timer % 1000;
+		sec  = timer / 1000;
+		min  = sec / 60;
+		sec -= min * 60;
+		ten = sec / 10;
+		sec -= ten * 10;
+
+		s = (min > 0) ? va("%i:%i%i.%03i", min, ten, sec, msec) : va("%i%i.%03i", ten, sec, msec);
+		w = CG_DrawStrlen(s) * SMALLCHAR_WIDTH * 0.5;
+		CG_DrawString(x+w, y, s, colorWhite, SMALLCHAR_WIDTH, SMALLCHAR_HEIGHT, 0, DS_SHADOW | DS_RIGHT | DS_PROPORTIONAL);
+	}
+	//..............................................
+	static void CG_DrawTimerBest(float x, float y, float alpha) {
+
+		int timer;
+
+		int msec;
+		int sec;
+		int min;
+		int ten;
+
+		char* s;
+		int   w;
+
+		// Don't draw the best timer when its 0 or negative
+		if (cg.timer_best <= 0) {
+			return;
+		}
+
+		x = x * SCREEN_WIDTH;
+		y = y * SCREEN_HEIGHT;
+
+		timer = cg.timer_best;
+
+		msec = timer % 1000;
+		sec  = timer / 1000;
+		min  = sec / 60;
+		sec -= min * 60;
+		ten = sec / 10;
+		sec -= ten * 10;
+
+		s = (min > 0) ? va("%i:%i%i.%03i", min, ten, sec, msec) : va("%i%i.%03i", ten, sec, msec);
+		w = CG_DrawStrlen(s) * SMALLCHAR_WIDTH * 0.5;
+		CG_DrawString(x+w, y, s, colorWhite, SMALLCHAR_WIDTH, SMALLCHAR_HEIGHT, 0, DS_SHADOW | DS_RIGHT | DS_PROPORTIONAL);
+	}
+	//..............................................
+	static void CG_DrawSmallIntCentered(int num, float x, float y, float alpha) {
+
+		char* time;
+		int w;
+
+		// Convert [0-1] input range to ui expected range
+		x          = x * SCREEN_WIDTH;
+		y          = y * SCREEN_HEIGHT;
+		time = va("%i", num);
+		w    = CG_DrawStrlen(time) * SMALLCHAR_WIDTH * 0.5;
+		CG_DrawString(x+w, y, time, colorWhite, SMALLCHAR_WIDTH, SMALLCHAR_HEIGHT, 0, DS_SHADOW | DS_RIGHT | DS_PROPORTIONAL);
+	}
+	//..............................................
+	static void CG_DrawPMTime(float x, float y, float alpha) {
+		CG_DrawSmallIntCentered(cg.snap->ps.pm_time, x, y, alpha);
+	}
+	//:::::::::::::::::::::::::::::::::::::::::
 
 /*
 =================
@@ -2699,6 +2788,8 @@ static void CG_Draw2D( stereoFrame_t stereoFrame )
 	cg.scoreBoardShowing = CG_DrawScoreboard();
 	if ( !cg.scoreBoardShowing ) {
 		CG_DrawCenterString();
+		CG_DrawTimerActive(cg_timerActive_x.value, cg_timerActive_y.value, 1.0F);
+		CG_DrawTimerBest(cg_timerBest_x.value, cg_timerBest_y.value, 1.0F);
 	}
 
 	if ( cgs.score_catched ) {

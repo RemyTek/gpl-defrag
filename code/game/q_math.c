@@ -36,11 +36,13 @@ vec4_t		colorYellow	= {1, 1, 0, 1};
 vec4_t		colorMagenta= {1, 0, 1, 1};
 vec4_t		colorCyan	= {0, 1, 1, 1};
 vec4_t		colorWhite	= {1, 1, 1, 1};
+vec4_t		colorOrange = {0.95, 0.61, 0.07, 1};
+vec4_t		colorPink	= {1, 0.41, 0.71, 1};
 vec4_t		colorLtGrey	= {0.75, 0.75, 0.75, 1};
 vec4_t		colorMdGrey	= {0.5, 0.5, 0.5, 1};
 vec4_t		colorDkGrey	= {0.25, 0.25, 0.25, 1};
 
-vec4_t	g_color_table[8] =
+vec4_t	g_color_table[10] =
 	{
 	{0.0, 0.0, 0.0, 1.0},
 	{1.0, 0.0, 0.0, 1.0},
@@ -50,6 +52,8 @@ vec4_t	g_color_table[8] =
 	{0.0, 1.0, 1.0, 1.0},
 	{1.0, 0.0, 1.0, 1.0},
 	{1.0, 1.0, 1.0, 1.0},
+	{0.95, 0.61, 0.07, 1.0},
+	{1.0, 0.41, 0.71, 1.0},
 	};
 
 
@@ -1174,6 +1178,13 @@ void Vector4Scale( const vec4_t in, vec_t scale, vec4_t out ) {
 	out[3] = in[3]*scale;
 }
 
+//osdf
+void VectorMAM(float scale1, vec3_t b1, float scale2, vec3_t b2, vec3_t c) {
+	c[0] = scale1 * b1[0] + scale2 * b2[0];
+	c[1] = scale1 * b1[1] + scale2 * b2[1];
+	c[2] = scale1 * b1[2] + scale2 * b2[2];
+}
+
 
 int Q_log2( int val ) {
 	int answer;
@@ -1304,4 +1315,51 @@ void PerpendicularVector( vec3_t dst, const vec3_t src )
 	VectorNormalize( dst );
 }
 
+//added by Kr3m
+
+//#ifndef Q3_VM
+/*
+=====================
+Q_acos
+
+the msvc acos doesn't always return a value between -PI and PI:
+
+int i;
+i = 1065353246;
+acos(*(float*) &i) == -1.#IND0
+
+=====================
+*/
+/*float Q_acos(float c) {
+	float angle;
+
+	//Probably needs fixing
+	angle = acos(c);
+
+	if (angle > M_PI) {
+		return (float)M_PI;
+	}
+	if (angle < -M_PI) {
+		return (float)M_PI;
+	}
+	return angle;
+}*/
+
+/*
+=====================
+Q_powf
+
+return float x power of y
+
+=====================
+*/
+float Q_powf ( float x, int y )
+{
+	float r = x;
+	for ( y--; y>0; y-- )
+		r *= x;
+	return r;
+}
+
+//#endif
 

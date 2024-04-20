@@ -335,6 +335,10 @@ extern	vec4_t		colorLtGrey;
 extern	vec4_t		colorMdGrey;
 extern	vec4_t		colorDkGrey;
 
+//added by Kr3m
+extern	vec4_t		colorOrange;
+extern	vec4_t		colorPink;
+
 #define Q_COLOR_ESCAPE	'^'
 #define Q_IsColorString(p)	( p && *(p) == Q_COLOR_ESCAPE && *((p)+1) && *((p)+1) != Q_COLOR_ESCAPE )
 
@@ -359,7 +363,7 @@ extern	vec4_t		colorDkGrey;
 
 #define S_COLOR_STRIP	S_COLOR_WHITE
 
-extern vec4_t	g_color_table[8];
+extern vec4_t	g_color_table[10];
 
 #define	MAKERGB( v, r, g, b ) v[0]=r;v[1]=g;v[2]=b
 #define	MAKERGBA( v, r, g, b, a ) v[0]=r;v[1]=g;v[2]=b;v[3]=a
@@ -519,10 +523,11 @@ void CrossProduct( const vec3_t v1, const vec3_t v2, vec3_t cross );
 vec_t VectorNormalize (vec3_t v);		// returns vector length
 vec_t VectorNormalize2( const vec3_t v, vec3_t out );
 void Vector4Scale( const vec4_t in, vec_t scale, vec4_t out );
+//osdf
+void VectorMAM(float scale1, vec3_t b1, float scale2, vec3_t b2, vec3_t c);
+//osdf
 void VectorRotate( vec3_t in, vec3_t matrix[3], vec3_t out );
 int Q_log2(int val);
-
-float Q_acos(float c);
 
 int		Q_rand( int *seed );
 float	Q_random( int *seed );
@@ -548,6 +553,10 @@ void	AnglesSubtract( vec3_t v1, vec3_t v2, vec3_t v3 );
 float AngleNormalize360 ( float angle );
 float AngleNormalize180 ( float angle );
 float AngleDelta ( float angle1, float angle2 );
+
+//added by Kr3m
+float Q_powf ( float x, int y );
+//float Q_acos ( float c );
 
 qboolean PlaneFromPoints( vec4_t plane, const vec3_t a, const vec3_t b, const vec3_t c );
 void ProjectPointOnPlane( vec3_t dst, const vec3_t p, const vec3_t normal );

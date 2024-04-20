@@ -1,0 +1,10 @@
+.idea/
+assets.zip
+build/linux-qvm/vm/
+build/linux-qvm/*.pk3
+build/win32-msvc/osdf.bat
+build/win32-msvc/.vs/
+build/win32-msvc/x64/
+build/win32-qvm/vm/
+build/linux-qvm/osdf
+workspace
